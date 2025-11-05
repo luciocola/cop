@@ -1,73 +1,37 @@
 {
   "stac_version": "1.0.0",
   "stac_extensions": [
-    "https://stac-extensions.github.io/item-assets/v1.0.0/schema.json",
-    "https://stac-extensions.github.io/template/v1.0.0/schema.json"
+    "https://example.com/stac/extensions/cop/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json"
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
+    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
   ],
   "type": "Collection",
-  "id": "collection",
-  "title": "A title",
-  "description": "A description",
-  "license": "Apache-2.0",
+  "id": "cop-features-atlantic-tornado-11-03-2025",
+  "title": "COP Feature Assets for ....",
+  "description": "A collection of real-time feature query results related to the operational area, filtered by DGGS cells.",
+  "license": "proprietary",
   "extent": {
     "spatial": {
       "bbox": [
-        [
-          172.9,
-          1.3,
-          173,
-          1.4
-        ]
+        [-80.0, 30.0, -70.0, 45.0] //General extent of the operational area
       ]
     },
     "temporal": {
       "interval": [
-        [
-          "2015-06-23T00:00:00Z",
-          null
-        ]
+        ["2025-11-03T09:00:00Z", "2025-11-03T12:00:00Z"] // Time window of features
       ]
     }
   },
-  "template:new_field": "test",
-  "template:xyz": {
-    "x": 1,
-    "y": 2,
-    "z": 3
-  },
-  "template:another_one": [
-    1,
-    2,
-    3
-  ],
-  "assets": {
-    "example": {
-      "href": "https://example.com/examples/file.xyz",
-      "template:new_field": "test"
-    }
-  },
-  "item_assets": {
-    "data": {
-      "roles": [
-        "data"
-      ],
-      "template:new_field": "test"
-    }
-  },
   "summaries": {
-    "datetime": {
-      "minimum": "2015-06-23T00:00:00Z",
-      "maximum": "2019-07-10T13:44:56Z"
-    }
+    "cop:dggs_crs": ["rHEALPix-R12", "rHEALPix-R14"],
+    "cop:asset_type": ["feature-query-result", "point-of-interest"],
+    "cop:id": ["123456"]
   },
   "links": [
-    {
-      "href": "https://example.com/examples/collection.json",
-      "rel": "self"
-    },
-    {
-      "href": "https://example.com/examples/item.json",
-      "rel": "item"
-    }
+    // Link to the main COP manifest
+    {"rel": "about", "href": "s3://cop-manifests/cop-manifest.json", "title": "COP Master Manifest"}
   ]
 }
+
+
