@@ -49,12 +49,12 @@ The fields in the table below can be used in these parts of STAC documents:
 
 | Field Name           | Type                      | Description                                  |
 | -------------------- | ------------------------- | -------------------------------------------- |
-| cop:collection   | string                    | **REQUIRED**. Describe the required field... |
-| cop:id         | [id Object](#id-object) | **REQUIRED**. Object identifier                       |
+| cop:collection   | string                    | **REQUIRED**. Describe the required field...                   |
 | cop:description | A collection of real-time feature query results related to the operational area, filtered by DGGS cells.                      |
 | cop:license | "propertary", "public"                 |license type                       |
 | cop:releasability  | string              | to single entity, group(s)....                |
-| cop:summaries | "dggs_crs","asset_type","id"              | dggrs, feature_query POI, idcop
+| cop:summaries | "dggs_crs","dggrs_zone_id volume of interest", "asset_type"..           | dggrs, dggsfeature_query POI, volume of interest
+| file:checksum | string             | Provides a way to specify file checksums (e.g. BLAKE2, MD5, SHA1, SHA2, SHA3). The hashes are self-identifying hashes as described in the Multihash specification and must be encoded as hexadecimal (base 16) string with lowercase letters.
 | cop:links | "rel": "about", "href": "s3://cop-manifests/123456.json", "title": "COP Master Manifest" | COP manifest
 
 
@@ -63,6 +63,20 @@ The fields in the table below can be used in these parts of STAC documents:
 #### cop:collection
 
 This is a much more detailed description of the field `cop:feature`...
+
+#### cop:releasability
+
+This is a field describing releasability to a group of entities or peoples depending access rights.
+
+#### cop:summaries
+
+This is a field describing the usage of DGGS in describing the feature, it should enable a 3D definition of the Volume of Interest with DGGRS zone ID.. TBD
+
+
+#### file:checksum
+
+Please refers to:
+https://github.com/stac-extensions/file
 
 ### feature Object
 
@@ -74,7 +88,7 @@ This is the introduction for the purpose and the content of the XYZ Object...
 | description       | text      | **REQUIRED**. Describe the required field... |
 | license           | text      | **REQUIRED**. Describe the required field... |
 | releasability     | text      | **REQUIRED**. Describe the required field... |
-| summaries         | text      | **REQUIRED**. Describe the required field... |
+| checksum          | text      | **REQUIRED**. Describe the required field... |
 | links             | href      | **REQUIRED**. Describe the required field... |
 
 
