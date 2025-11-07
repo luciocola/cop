@@ -68,14 +68,14 @@ This is a much more detailed description of the field `cop:feature`...
 
 This is the introduction for the purpose and the content of the XYZ Object...
 
-| Field Name | Type      | Description                                  |
-| ---------- | --------- | -------------------------------------------- |
-| id         | number    | **REQUIRED**. Describe the required field... |
-| description| text      | **REQUIRED**. Describe the required field... |
-| license    | text      | **REQUIRED**. Describe the required field... |
-| releasability     | text | **REQUIRED**. Describe the required field... |
-| summaries   | text      | **REQUIRED**. Describe the required field... |
-| links      | href      | **REQUIRED**. Describe the required field... |
+| Field Name        | Type      | Description                                  |
+| ----------------- | --------- | -------------------------------------------- |
+| id                | number    | **REQUIRED**. Describe the required field... |
+| description       | text      | **REQUIRED**. Describe the required field... |
+| license           | text      | **REQUIRED**. Describe the required field... |
+| releasability     | text      | **REQUIRED**. Describe the required field... |
+| summaries         | text      | **REQUIRED**. Describe the required field... |
+| links             | href      | **REQUIRED**. Describe the required field... |
 
 
 
