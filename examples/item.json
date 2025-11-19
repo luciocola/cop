@@ -10,9 +10,10 @@
   "id": "poi-00123",
   "properties": {
     "datetime": "2025-11-03T09:00:00Z",
-    "cop:id": "123456",
-    "mission": "Emergency Response Team A",
-    "cop:dggs_id": "R312603625535", 
+    "cop:mission": "Emergency Response Team A",
+    "cop:dggs_zone_id": "R312603625535",
+    "cop:classification": "public release",
+    "cop:releasability": "1:N", 
        // Hypothetical rHEALPix ID for New York City area at a high resolution
     "cop:dggs_crs": "rHEALPix-R12" 
   },
@@ -49,8 +50,12 @@
   "id": "wms-weather-radar",
   "properties": {
     "datetime": "2025-11-03T09:40:00Z",
-    "cop:id": "123456",
-    "service_provider": "National Weather Service"
+    "service_provider": "National Weather Service",
+    "cop:dggs_zone_id": "R312603625535",
+    "cop:classification": "public release",
+    "cop:releasability": "1:N", 
+       // Hypothetical rHEALPix ID for New York City area at a high resolution
+    "cop:dggs_crs": "rHEALPix-R12" 
     // DGGS fields are not relevant for an item representing a service endpoint maybe to be used in case of spatial queries.
   },
   "geometry": null,
