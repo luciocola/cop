@@ -1,41 +1,31 @@
-# Common Operating Picture Extension Specification
+# Common Operating Picture (COP) Extension Specification
 
-- **Title:** COP
+- **Title:** Common Operating Picture (COP)
 - **Identifier:** <https://stac-extensions.github.io/cop/v1.0.0/schema.json>
 - **Field Name Prefix:** cop
 - **Scope:** Item, Collection
 - **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
-- **Owner**: @luciocola
+- **Owner**: @luciocola <https://secure-dimensions.de>
 
-This document explains the Common Operating Picture Extension to the [SpatioTemporal Asset Catalog](https://github.com/radiantearth/stac-spec) (STAC) specification.
-A Common Operating Picture (COP) file is a standardized format used to transfer data from one system to another. It's designed to facilitate the exchange of information between different systems, platforms, and applications. Based on the work of OGC --OWS Context Conceptual Model 12-080r2.
+This extension provides fields for documenting Common Operating Picture (COP) information in STAC catalogs. It facilitates the exchange of operational data using Discrete Global Grid Systems (DGGS) for spatial organization, supporting emergency response, defense operations, and real-time situational awareness.
 
-In general, a COP file should contain the following characteristics:
+## Background
 
-1. **Standardized Format**: The file should be in a widely accepted format, such as XML (Extensible Markup Language) in the OGC document only XML and atom georss, JSON (JavaScript Object Notation), or CSV (Comma-Separated Values).
-2. **Well-Defined Structure**: The file should have a clear and well-defined structure, including:
-	* A header section that provides metadata about the file, such as timestamp, version number, and sender information.
-	* One or more data sections containing the actual information being transferred (e.g., sensor readings, system status, etc.).
-	* A trailer section that indicates the end of the file and may include error-checking or checksum values.
-3. **Interoperability**: The COP file should be designed to be compatible with multiple systems, platforms, and applications, ensuring that information can be exchanged seamlessly across different environments.
-4. **Data Consistency**: The file should ensure data consistency by providing a single, unified view of the information being transferred. This means that the data is presented in a consistent format, without duplication or inconsistencies.
-5. **Error Handling**: The COP file should include mechanisms for handling errors, such as:
-	* Error detection: The file should be designed to detect errors during transmission or processing.
-	* Error correction: The file should provide mechanisms for correcting errors or rejecting corrupted data.
+A Common Operating Picture (COP) is a standardized format for transferring operational data between systems, platforms, and applications. Based on the OGC OWS Context Conceptual Model (12-080r2), this extension enables:
 
-Some common examples of COP files include:
+- **Standardized Data Exchange**: Consistent format for operational information
+- **DGGS-based Spatial Organization**: Uses rHEALPix or other DGGS for spatial indexing
+- **Real-time Situational Awareness**: Support for time-sensitive operational data
+- **Multi-domain Operations**: Emergency response, defense, disaster management
+- **Interoperability**: Seamless exchange across different systems
 
-1. Sensor data exchange formats like the Aerospace Information Agency's (AIA) SENSORS message format.
-2. Log files from network devices, such as routers and switches, in a standard format like syslog.
-3. Data transfer protocols used in industrial automation, like the OPC Unified Architecture (OPCU).
+## Use Cases
 
-When designing a COP file, it's essential to consider the specific use case, the systems involved, and the requirements for data exchange. A well-designed COP file can facilitate efficient information sharing, improve system interoperability, and reduce errors during transmission or processing. In the Context of the AI-DGGS we are referring to Emergency (flooding) and we can extend it to Defence scenarios. In the later case it should be revised accrodingly to OGC COnnected Systems.
-
-- Examples:
-  - [Item example](examples/item.json): Shows the basic usage of the extension in a STAC Item
-  - [Collection example](examples/collection.json): Shows the basic usage of the extension in a STAC Collection
-- [JSON Schema](json-schema/schema.json)
-- [Changelog](./CHANGELOG.md)
+1. **Emergency Response Operations**: Track resources, incidents, and response activities during flooding, wildfires, or natural disasters
+2. **Defense and Security**: Coordinate military operations with spatial and temporal precision
+3. **Disaster Management**: Organize relief efforts using DGGS-based spatial cells
+4. **Real-time Sensor Networks**: Integrate sensor data into operational picture
+5. **Multi-agency Coordination**: Share information across organizational boundaries with appropriate access controls
 
 ## Fields
 
@@ -47,88 +37,164 @@ The fields in the table below can be used in these parts of STAC documents:
 - [x] Assets (for both Collections and Items, incl. Item Asset Definitions in Collections)
 - [ ] Links
 
-| Field Name           | Type                      | Description                                  |
-| -------------------- | ------------------------- | -------------------------------------------- |
-| cop:collection   | string                    | **REQUIRED**. Describe the required field...                   |
-| cop:description | A collection of real-time feature query results related to the operational area, filtered by DGGS cells.                      |
-| cop:license | "propertary", "public"                 |license type                       |
-| cop:releasability  | string              | to single entity, group(s)....                |
-| cop:summaries | "dggs_crs","dggrs_zone_id volume of interest", "asset_type"..           | dggrs, dggsfeature_query POI, volume of interest
-| file:checksum | string             | Provides a way to specify file checksums (e.g. BLAKE2, MD5, SHA1, SHA2, SHA3). The hashes are self-identifying hashes as described in the Multihash specification and must be encoded as hexadecimal (base 16) string with lowercase letters.
-| cop:links | "rel": "about", "href": "s3://cop-manifests/123456.json", "title": "COP Master Manifest" | COP manifest
+### Item and Collection Properties
 
+| Field Name              | Type   | Description |
+| ----------------------- | ------ | ----------- |
+| cop:mission             | string | **RECOMMENDED.** Mission or operation identifier |
+| cop:classification      | string | **RECOMMENDED.** Security classification level. One of: `public release`, `internal`, `confidential`, `restricted`, `classified` |
+| cop:releasability       | string | Releasability specification (e.g., `1:N` for one-to-many, specific entity/group identifiers) |
+| cop:dggs_zone_id        | string | DGGS zone identifier for the operational area (e.g., rHEALPix cell ID like `R312603625535`) |
+| cop:dggs_crs            | string | DGGS Coordinate Reference System (e.g., `rHEALPix-R12`) |
+| cop:service_provider    | string | Provider of the service or data |
+| cop:manifest_ref        | string (URI) | Reference to the master COP manifest |
+| cop:volume_of_interest  | Volume Object | 3D volume of interest definition using DGGS zones |
+
+### Asset-Level Fields
+
+| Field Name              | Type   | Description |
+| ----------------------- | ------ | ----------- |
+| cop:asset_type          | string | Type of COP asset. One of: `feature`, `feature-query-result`, `point-of-interest`, `web-service`, `sensor-data`, `imagery`, `other` |
+| cop:integrity_hash      | string | Integrity hash for asset verification (format: `algorithm:hash`, e.g., `sha256:abc123...`) |
 
 ### Additional Field Information
 
-#### cop:collection
+#### cop:classification
 
-This is a much more detailed description of the field `cop:feature`...
+Security classification levels for operational data:
+
+- `public release`: Publicly accessible information
+- `internal`: Internal use only
+- `confidential`: Confidential operational information
+- `restricted`: Highly restricted (e.g., attorney-client privilege, sensitive operations)
+- `classified`: Classified information requiring security clearance
 
 #### cop:releasability
 
-This is a field describing releasability to a group of entities or peoples depending access rights.
+Specifies who can access the data:
+- `1:N`: One-to-many (broadcast to all authorized parties)
+- Entity/group identifiers: Specific organizations or individuals
+- Coalition identifiers: Multi-national or multi-agency groups
 
-#### cop:summaries
+#### cop:dggs_zone_id and cop:dggs_crs
 
-This is a field describing the usage of DGGS in describing the feature, it should enable a 3D definition of the Volume of Interest with DGGRS zone ID.. TBD
+DGGS (Discrete Global Grid System) fields enable precise spatial organization:
+- **cop:dggs_zone_id**: Unique cell identifier (e.g., `R312603625535` for rHEALPix)
+- **cop:dggs_crs**: CRS specification including resolution (e.g., `rHEALPix-R12`)
 
+Supports various DGGS implementations including rHEALPix, H3, S2, and others.
 
-#### file:checksum
+#### cop:asset_type
 
-Please refers to:
-https://github.com/stac-extensions/file
+Categories of operational assets:
 
-### feature Object
+- `feature`: GeoJSON feature or feature collection
+- `feature-query-result`: Results from spatial/temporal queries
+- `point-of-interest`: Critical locations in operational area
+- `web-service`: OGC web services (WMS, WFS, WCS, etc.)
+- `sensor-data`: Real-time sensor observations
+- `imagery`: Satellite, aerial, or drone imagery
+- `other`: Other asset types
 
-This is the introduction for the purpose and the content of the XYZ Object...
+#### cop:integrity_hash
 
-| Field Name        | Type      | Description                                  |
-| ----------------- | --------- | -------------------------------------------- |
-| id                | number    | **REQUIRED**. Describe the required field... |
-| description       | text      | **REQUIRED**. Describe the required field... |
-| license           | text      | **REQUIRED**. Describe the required field... |
-| releasability     | text      | **REQUIRED**. Describe the required field... |
-| checksum          | text      | **REQUIRED**. Describe the required field... |
-| links             | href      | **REQUIRED**. Describe the required field... |
+Self-identifying hash following the [Multihash specification](https://github.com/multiformats/multihash), encoded as hexadecimal string with lowercase letters (e.g., `sha256:a1b2c3...`).
 
+#### Volume of Interest Object
 
+Used in `cop:volume_of_interest` field:
 
-## Relation types
+| Field Name  | Type   | Description |
+| ----------- | ------ | ----------- |
+| min_zone    | string | Minimum DGGS zone ID (bottom/lower bound) |
+| max_zone    | string | Maximum DGGS zone ID (top/upper bound) |
+| resolution  | string | DGGS resolution level |
 
-The following types should be used as applicable `rel` types in the
-[Link Object](https://github.com/radiantearth/stac-spec/tree/master/item-spec/item-spec.md#link-object).
+## Examples
 
-| Type           | Description                           |
-| -------------- | ------------------------------------- |
-| fancy-rel-type | This link points to a fancy resource. |
+### Example 1: Point of Interest Feature
 
+```json
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/cop/v1.0.0/schema.json"
+  ],
+  "type": "Feature",
+  "id": "poi-00123",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[-74.0062, 40.7130], [-74.0058, 40.7130], 
+                     [-74.0058, 40.7126], [-74.0062, 40.7126], 
+                     [-74.0062, 40.7130]]]
+  },
+  "properties": {
+    "datetime": "2025-11-03T09:00:00Z",
+    "cop:mission": "Emergency Response Team A",
+    "cop:dggs_zone_id": "R312603625535",
+    "cop:dggs_crs": "rHEALPix-R12",
+    "cop:classification": "public release",
+    "cop:releasability": "1:N"
+  },
+  "assets": {
+    "feature_data": {
+      "href": "s3://cop-data/features/poi-00123.geojson",
+      "type": "application/geo+json",
+      "cop:asset_type": "feature",
+      "cop:integrity_hash": "sha256:a1b2c3d4e5f6..."
+    }
+  }
+}
+```
+
+See the [examples directory](examples/) for complete examples including service endpoints and collections.
+
+## Relation Types
+
+The following relation types are recommended for use in COP documents:
+
+| Type   | Description |
+| ------ | ----------- |
+| about  | Link to the master COP manifest or operational plan |
+
+## Best Practices
+
+1. **DGGS Usage**: Always specify both `cop:dggs_zone_id` and `cop:dggs_crs` when using DGGS-based spatial organization
+2. **Security Classification**: Set appropriate `cop:classification` and `cop:releasability` for all operational data
+3. **Asset Integrity**: Use `cop:integrity_hash` for critical assets to ensure data integrity
+4. **Manifest References**: Link to master COP manifests using `cop:manifest_ref` or `about` relation links
+5. **Temporal Precision**: Use RFC 3339 timestamps for all datetime fields
 ## Contributing
 
 All contributions are subject to the
 [STAC Specification Code of Conduct](https://github.com/radiantearth/stac-spec/blob/master/CODE_OF_CONDUCT.md).
 For contributions, please follow the
-[STAC specification contributing guide](https://github.com/radiantearth/stac-spec/blob/master/CONTRIBUTING.md) Instructions
-for running tests are copied here for convenience.
+[STAC specification contributing guide](https://github.com/radiantearth/stac-spec/blob/master/CONTRIBUTING.md).
 
 ### Running tests
 
 The same checks that run as checks on PR's are part of the repository and can be run locally to verify that changes are valid. 
 To run tests locally, you'll need `npm`, which is a standard part of any [node.js installation](https://nodejs.org/en/download/).
 
-First you'll need to install everything with npm once. Just navigate to the root of this repository and on 
-your command line run:
+First you'll need to install everything with npm once. Navigate to the root of this repository and run:
+
 ```bash
 npm install
 ```
 
-Then to check markdown formatting and test the examples against the JSON schema, you can run:
+Then to check markdown formatting and test the examples against the JSON schema:
+
 ```bash
 npm test
 ```
 
-This will spit out the same texts that you see online, and you can then go and fix your markdown or examples.
-
 If the tests reveal formatting problems with the examples, you can fix them with:
+
 ```bash
-npm run cop-examples
+npm run format-examples
 ```
+
+## License
+
+This extension is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+

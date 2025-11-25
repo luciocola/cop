@@ -1,36 +1,48 @@
 {
   "stac_version": "1.0.0",
   "stac_extensions": [
-    "https://example.com/stac/extensions/cop/v1.0.0/schema.json"
-    "https://stac-extensions.github.io/alternate-assets/v1.1.0/schema.json"
-    "https://stac-extensions.github.io/file/v2.1.0/schema.json"
-    "https://stac-extensions.github.io/storage/v1.0.0/schema.json"
+    "https://stac-extensions.github.io/cop/v1.0.0/schema.json"
   ],
   "type": "Collection",
   "id": "cop-features-atlantic-tornado-11-03-2025",
-  "title": "COP Feature Assets for ....",
-  "description": "A collection of real-time feature query results related to the operational area, filtered by DGGS cells.",
+  "title": "COP Feature Assets for Atlantic Tornado Response",
+  "description": "A collection of real-time feature query results related to the operational area, filtered by DGGS cells",
   "license": "proprietary",
   "extent": {
     "spatial": {
       "bbox": [
-        [-80.0, 30.0, -70.0, 45.0] //General extent of the operational area
+        [-80.0, 30.0, -70.0, 45.0]
       ]
     },
     "temporal": {
       "interval": [
-        ["2025-11-03T09:00:00Z", "2025-11-03T12:00:00Z"] // Time window of features
+        ["2025-11-03T09:00:00Z", "2025-11-03T12:00:00Z"]
       ]
     }
   },
   "summaries": {
     "cop:dggs_crs": ["rHEALPix-R12", "rHEALPix-R14"],
-    "cop:asset_type": ["feature-query-result", "point-of-interest"],
-    "cop:id": ["123456"]
+    "cop:asset_type": ["feature-query-result", "point-of-interest", "web-service"],
+    "cop:classification": ["public release", "internal"]
   },
   "links": [
-    // Link to the main COP manifest
-    {"rel": "about", "href": "s3://cop-manifests/cop-manifest.json", "title": "COP Master Manifest"}
+    {
+      "rel": "self",
+      "href": "./collection.json"
+    },
+    {
+      "rel": "root",
+      "href": "./collection.json"
+    },
+    {
+      "rel": "item",
+      "href": "./item.json"
+    },
+    {
+      "rel": "about",
+      "href": "s3://cop-manifests/cop-manifest.json",
+      "title": "COP Master Manifest"
+    }
   ]
 }
 

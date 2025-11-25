@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stac-extensions.github.io/template/v1.0.0/schema.json#",
-  "title": "Template Extension",
-  "description": "STAC Template Extension for STAC Items and STAC Collections.",
+  "$id": "https://stac-extensions.github.io/cop/v1.0.0/schema.json#",
+  "title": "Common Operating Picture (COP) Extension",
+  "description": "STAC COP Extension for Items and Collections - Facilitates exchange of operational information using DGGS-based spatial organization.",
   "oneOf": [
     {
       "$comment": "This is the schema for STAC Items. Remove this object if this extension only applies to Collections.",
@@ -24,10 +24,8 @@
             "properties": {
               "allOf": [
                 {
-                  "$comment": "Require fields here for Item Properties.",
-                  "required": [
-                    "template:new_field"
-                  ]
+                  "$comment": "Require at least one COP field in Item Properties.",
+                  "$ref": "#/definitions/require_any_field"
                 },
                 {
                   "$ref": "#/definitions/fields"
@@ -68,10 +66,8 @@
           "$comment": "This is the schema for the top-level fields in a Collection. Remove this if this extension does not define top-level fields for Collections.",
           "allOf": [
             {
-              "$comment": "Require fields here for Collections (top-level).",
-              "required": [
-                "template:new_field"
-              ]
+              "$comment": "Require at least one COP field for Collections (top-level).",
+              "$ref": "#/definitions/require_any_field"
             },
             {
               "$ref": "#/definitions/fields"
@@ -152,7 +148,7 @@
         "stac_extensions": {
           "type": "array",
           "contains": {
-            "const": "https://stac-extensions.github.io/template/v1.0.0/schema.json"
+            "const": "https://stac-extensions.github.io/cop/v1.0.0/schema.json"
           }
         }
       }
@@ -160,47 +156,82 @@
     "require_any_field": {
       "$comment": "Please list all fields here so that we can force the existence of one of them in other parts of the schemas.",
       "anyOf": [
-        {"required": ["template:new_field"]},
-        {"required": ["template:xyz"]},
-        {"required": ["template:another_one"]}
+        {"required": ["cop:mission"]},
+        {"required": ["cop:classification"]},
+        {"required": ["cop:releasability"]},
+        {"required": ["cop:dggs_zone_id"]},
+        {"required": ["cop:dggs_crs"]},
+        {"required": ["cop:asset_type"]},
+        {"required": ["cop:integrity_hash"]},
+        {"required": ["cop:manifest_ref"]}
       ]
     },
     "fields": {
       "$comment": "Add your new fields here. Don't require them here, do that above in the corresponding schema.",
       "type": "object",
       "properties": {
-        "template:new_field": {
-          "type": "string"
+        "cop:mission": {
+          "type": "string",
+          "description": "Mission or operation identifier"
         },
-        "template:xyz": {
+        "cop:classification": {
+          "type": "string",
+          "enum": ["public release", "internal", "confidential", "restricted", "classified"],
+          "description": "Security classification level of the COP data"
+        },
+        "cop:releasability": {
+          "type": "string",
+          "description": "Releasability specification (e.g., '1:N' for one-to-many, specific entity/group identifiers)"
+        },
+        "cop:dggs_zone_id": {
+          "type": "string",
+          "description": "DGGS zone identifier for the operational area (e.g., rHEALPix cell ID)"
+        },
+        "cop:dggs_crs": {
+          "type": "string",
+          "description": "DGGS Coordinate Reference System (e.g., 'rHEALPix-R12')"
+        },
+        "cop:asset_type": {
+          "type": "string",
+          "enum": ["feature", "feature-query-result", "point-of-interest", "web-service", "sensor-data", "imagery", "other"],
+          "description": "Type of COP asset"
+        },
+        "cop:integrity_hash": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+:[a-f0-9]+$",
+          "description": "Integrity hash for asset verification (format: algorithm:hash, e.g., 'sha256:abc123...')"
+        },
+        "cop:manifest_ref": {
+          "type": "string",
+          "format": "uri",
+          "description": "Reference to the master COP manifest"
+        },
+        "cop:service_provider": {
+          "type": "string",
+          "description": "Provider of the service or data"
+        },
+        "cop:volume_of_interest": {
           "type": "object",
-          "required": [
-            "x",
-            "y",
-            "z"
-          ],
+          "description": "3D volume of interest definition using DGGS zones",
           "properties": {
-            "x": {
-              "type": "number"
+            "min_zone": {
+              "type": "string",
+              "description": "Minimum DGGS zone ID (bottom/lower bound)"
             },
-            "y": {
-              "type": "number"
+            "max_zone": {
+              "type": "string",
+              "description": "Maximum DGGS zone ID (top/upper bound)"
             },
-            "z": {
-              "type": "number"
+            "resolution": {
+              "type": "string",
+              "description": "DGGS resolution level"
             }
-          }
-        },
-        "template:another_one": {
-          "type": "array",
-          "items": {
-            "type": "number"
           }
         }
       },
       "patternProperties": {
-        "^(?!template:)": {
-          "$comment": "Above, change `template` to the prefix of this extension"
+        "^(?!cop:)": {
+          "$comment": "Above, change `cop` to the prefix of this extension"
         }
       },
       "additionalProperties": false
