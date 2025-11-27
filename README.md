@@ -21,11 +21,12 @@ A Common Operating Picture (COP) is a standardized format for transferring opera
 
 ## Use Cases
 
-1. **Emergency Response Operations**: Track resources, incidents, and response activities during flooding, wildfires, or natural disasters
-2. **Defense and Security**: Coordinate military operations with spatial and temporal precision
-3. **Disaster Management**: Organize relief efforts using DGGS-based spatial cells
-4. **Real-time Sensor Networks**: Integrate sensor data into operational picture
-5. **Multi-agency Coordination**: Share information across organizational boundaries with appropriate access controls
+1. **Emergency Response Operations**: Track resources, incidents, and response activities during flooding, wildfires, or natural disasters with vector features and raster elevation/hazard models
+2. **Defense and Security**: Coordinate military operations with spatial and temporal precision using both vector intelligence data and raster imagery/terrain analysis
+3. **Disaster Management**: Organize relief efforts using DGGS-based spatial cells, combining vector asset locations with raster damage assessments
+4. **Real-time Sensor Networks**: Integrate sensor data into operational picture, including vector point observations and raster interpolated surfaces
+5. **Multi-agency Coordination**: Share information across organizational boundaries with appropriate access controls, supporting both vector features and raster datasets
+6. **Terrain Analysis**: Distribute elevation models, slope analysis, and other raster-based terrain products for operational planning
 
 ## Fields
 
@@ -49,6 +50,9 @@ The fields in the table below can be used in these parts of STAC documents:
 | cop:service_provider    | string | Provider of the service or data |
 | cop:manifest_ref        | string (URI) | Reference to the master COP manifest |
 | cop:volume_of_interest  | Volume Object | 3D volume of interest definition using DGGS zones |
+| cop:platform            | string | Platform that captured or generated the data (e.g., satellite name, aircraft, UAV, sensor system) |
+| cop:sensor              | string | Sensor or instrument that captured the data |
+| cop:software_identifier | string | Software used to create or process the data (e.g., 'QGIS/3.28', 'ArcGIS/10.8') |
 
 ### Asset-Level Fields
 
@@ -94,11 +98,39 @@ Categories of operational assets:
 - `web-service`: OGC web services (WMS, WFS, WCS, etc.)
 - `sensor-data`: Real-time sensor observations
 - `imagery`: Satellite, aerial, or drone imagery
+- `raster`: Raster datasets including elevation models, analysis results, and gridded data
 - `other`: Other asset types
 
 #### cop:integrity_hash
 
 Self-identifying hash following the [Multihash specification](https://github.com/multiformats/multihash), encoded as hexadecimal string with lowercase letters (e.g., `sha256:a1b2c3...`).
+
+#### cop:platform
+
+Identifies the platform that captured or generated the data. Examples:
+- Satellite missions: `Sentinel-2A`, `Landsat-8`, `WorldView-3`
+- Aircraft: `Boeing 747-SP`, `Cessna 172`
+- UAV/Drones: `DJI Phantom 4`, `Fixed-wing UAV`
+- Ground systems: `Desktop QGIS`, `Mobile Sensor Array`
+- Other: `Ground Station`, `Weather Buoy`
+
+#### cop:sensor
+
+Specifies the sensor or instrument used to capture the data. Examples:
+- Satellite sensors: `MSI`, `OLI`, `TIRS`
+- Camera systems: `RGB Camera`, `Multispectral Camera`, `Thermal Imaging`
+- Software-generated: `QGIS Raster Layer`, `QGIS Vector Layer`
+- Other sensors: `LiDAR`, `SAR`, `Hyperspectral Imager`
+
+#### cop:software_identifier
+
+Identifies the software and version used to create or process the data. Format: `SoftwareName/Version`
+
+Examples:
+- `QGIS/3.28.1`
+- `ArcGIS/10.8.2`
+- `GDAL/3.4.1`
+- `Python/3.9.7`
 
 #### Volume of Interest Object
 
@@ -147,6 +179,44 @@ Used in `cop:volume_of_interest` field:
 }
 ```
 
+### Example 2: Raster Data (Elevation Model)
+
+```json
+{
+  "stac_version": "1.0.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/cop/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json"
+  ],
+  "type": "Feature",
+  "id": "elevation-model-00456",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[-122.5, 37.9], [-122.3, 37.9], 
+                     [-122.3, 37.7], [-122.5, 37.7], 
+                     [-122.5, 37.9]]]
+  },
+  "properties": {
+    "datetime": "2025-11-27T12:00:00Z",
+    "cop:mission": "Disaster Assessment Operation 2025-11",
+    "cop:dggs_zone_id": "R315782134567",
+    "cop:dggs_crs": "rHEALPix-R12",
+    "cop:classification": "public release",
+    "cop:platform": "Desktop QGIS",
+    "cop:sensor": "QGIS Raster Layer",
+    "cop:software_identifier": "QGIS/3.28.1"
+  },
+  "assets": {
+    "raster_data": {
+      "href": "https://assets.ogc.secd.eu/cop/rasters/elevation-model-00456.tif",
+      "type": "image/tiff; application=geotiff",
+      "cop:asset_type": "raster",
+      "cop:integrity_hash": "sha256:1a2b3c4d..."
+    }
+  }
+}
+```
+
 See the [examples directory](examples/) for complete examples including service endpoints and collections.
 
 ## Relation Types
@@ -164,6 +234,10 @@ The following relation types are recommended for use in COP documents:
 3. **Asset Integrity**: Use `cop:integrity_hash` for critical assets to ensure data integrity
 4. **Manifest References**: Link to master COP manifests using `cop:manifest_ref` or `about` relation links
 5. **Temporal Precision**: Use RFC 3339 timestamps for all datetime fields
+6. **Raster Data**: When using raster assets, combine with the [Raster Extension](https://github.com/stac-extensions/raster) for complete band and data type information
+7. **Platform and Sensor**: Use `cop:platform` and `cop:sensor` to track data provenance, especially important for multi-source operational environments
+8. **Software Tracking**: Include `cop:software_identifier` to maintain processing lineage and ensure reproducibility
+
 ## Contributing
 
 All contributions are subject to the

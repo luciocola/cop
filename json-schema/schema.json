@@ -163,7 +163,10 @@
         {"required": ["cop:dggs_crs"]},
         {"required": ["cop:asset_type"]},
         {"required": ["cop:integrity_hash"]},
-        {"required": ["cop:manifest_ref"]}
+        {"required": ["cop:manifest_ref"]},
+        {"required": ["cop:platform"]},
+        {"required": ["cop:sensor"]},
+        {"required": ["cop:software_identifier"]}
       ]
     },
     "fields": {
@@ -193,7 +196,7 @@
         },
         "cop:asset_type": {
           "type": "string",
-          "enum": ["feature", "feature-query-result", "point-of-interest", "web-service", "sensor-data", "imagery", "other"],
+          "enum": ["feature", "feature-query-result", "point-of-interest", "web-service", "sensor-data", "imagery", "raster", "other"],
           "description": "Type of COP asset"
         },
         "cop:integrity_hash": {
@@ -227,6 +230,18 @@
               "description": "DGGS resolution level"
             }
           }
+        },
+        "cop:platform": {
+          "type": "string",
+          "description": "Platform that captured or generated the data (e.g., satellite name, aircraft, UAV, sensor system)"
+        },
+        "cop:sensor": {
+          "type": "string",
+          "description": "Sensor or instrument that captured the data"
+        },
+        "cop:software_identifier": {
+          "type": "string",
+          "description": "Software used to create or process the data (e.g., 'QGIS/3.28', 'ArcGIS/10.8')"
         }
       },
       "patternProperties": {

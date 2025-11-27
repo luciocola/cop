@@ -26,6 +26,14 @@
       "description": "Current Emergency Response Mission Plan, Version 2.",
       "location": "https://docs.er.org/plans/mission-plan-v2.pdf",
       "integrity_hash": "sha256:f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e2f3g4h5i6j7k8"
+    },
+    {
+      "asset_id": "elevation-model-00456",
+      "type": "STAC_Item_Raster",
+      "description": "High-resolution elevation model for terrain analysis and flood risk assessment.",
+      "location": "s3://cop-stac-catalog/items/elevation-model-00456.json",
+      "integrity_hash": "sha256:e7f8a9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9",
+      "dggs_focus": "R315782134567"
     }
   ]
 }
