@@ -7,7 +7,7 @@
 - **Extension [Maturity Classification](https://github.com/radiantearth/stac-spec/tree/master/extensions/README.md#extension-maturity):** Proposal
 - **Owner**: @luciocola <https://secure-dimensions.de>
 
-This extension provides fields for documenting Common Operating Picture (COP) information in STAC catalogs. It facilitates the exchange of operational data using Discrete Global Grid Systems (DGGS) for spatial organization, supporting emergency response, defense operations, and real-time situational awareness.
+This extension provides fields for documenting Common Operating Picture (COP) information in STAC catalogs. This work is based on AI DGGS pilot with OGC Open Geospatial Consortium. It facilitates the exchange of operational data using Discrete Global Grid Systems (DGGS) for spatial organization, supporting emergency response, defense operations, and real-time situational awareness.
 
 ## Background
 
